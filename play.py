@@ -145,7 +145,7 @@ class Play:
         msg_box = messagebox.askquestion("Claiming your Prize", "Are you sure you want to claim your prize?",
                                          icon='warning')
         if msg_box == "yes":
-            playsound("sound.mp3")
+            playsound("byron.mp3")
             window.destroy()
             import claim_prize
 

@@ -2,9 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 from validate_email import validate_email
 import rsaidnumber
-from datetime import date, timedelta
+from datetime import date
 from dateutil.relativedelta import relativedelta
-from playsound import playsound
 
 window = Tk()
 window.geometry("600x600")
@@ -45,14 +44,6 @@ class Welcome:
                            command=self.exit)
         self.exit.place(x=500, y=500)
 
-    def add_files(self, text_add_files):
-        import json
-
-        text_add_files = json.dumps(text_add_files)
-
-        with open("Database.txt", "a+") as database_file:
-            database_file.write(text_add_files)
-
     def age_validation(self):
         ID = rsaidnumber.parse(self.id_entry.get())
         birthdate = ID.date_of_birth
@@ -65,6 +56,14 @@ class Welcome:
 
         elif age.years <= 18:
             messagebox.showerror("You are too young too play")
+
+    def add_files(self, text_add_files):
+        import json
+
+        text_add_files = json.dumps(text_add_files)
+
+        with open("text.txt", "a+") as database_file:
+            database_file.write(text_add_files)
 
     def verify(self):
         Name = self.name_entry.get()
@@ -99,7 +98,8 @@ class Welcome:
                     "email": Email,
                     "ID number": str(ID)
                 }
-                self.add_files(player)
+                self.text_add_files(player)
+
 
     def delete(self):
         self.name_entry.delete(0, END)

@@ -37,6 +37,37 @@ class Claim:
                            command=self.exit)
         self.exit.place(x=500, y=500)
 
+    def verify(self):
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+
+        sender_email_id = 'byronleetinker03@gmail.com'
+
+        receiver_email_id = [self.email_entry]
+
+        password = input("Enter your password")
+
+        subject = "Greetings"
+        msg = MIMEMultipart()
+        msg['From'] = sender_email_id
+        msg['To'] = ','.join(receiver_email_id)
+        msg['Subject'] = subject
+
+        body = "Congratulations.\n"
+        body = body + "You have claim your prize. Have a nice day."
+
+        msg.attach(MIMEText(body, 'plain'))
+        text = msg.as_string()
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+
+        s.login(sender_email_id, password)
+
+        s.sendmail(sender_email_id, receiver_email_id, text)
+
+        window.destroy()
+
     def convertor(self):
         msg_box = messagebox.askquestion("Currency Convertor", "Are you sure you want to convert your currency?",
                                          icon='warning')
