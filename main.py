@@ -4,6 +4,7 @@ from validate_email import validate_email
 import rsaidnumber
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+from playsound import playsound
 
 window = Tk()
 window.geometry("600x600")
@@ -44,6 +45,14 @@ class Welcome:
                            command=self.exit)
         self.exit.place(x=500, y=500)
 
+    def add_files(self, text_add_files):
+        import json
+
+        text_add_files = json.dumps(text_add_files)
+
+        with open("Database.txt", "a+") as database_file:
+            database_file.write(text_add_files)
+
     def age_validation(self):
         ID = rsaidnumber.parse(self.id_entry.get())
         birthdate = ID.date_of_birth
@@ -77,8 +86,20 @@ class Welcome:
 
         if len(ID) != 13:
             messagebox.showerror("Error", "Please enter correct ID number")
+            ID = rsaidnumber.parse(ID)
+            ID.valid
         else:
             self.age_validation()
+
+            self.age_validation(ID)
+            if int(self.age_validation(ID)) >= 18:
+                player = {
+                    "name": Name,
+                    "phone number": Number,
+                    "email": Email,
+                    "ID number": str(ID)
+                }
+                self.add_files(player)
 
     def delete(self):
         self.name_entry.delete(0, END)
