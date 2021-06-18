@@ -1,9 +1,11 @@
+# These are all my programming running in the background of my window.
 from tkinter import *
 from tkinter import messagebox
 import random
 from playsound import playsound
 import uuid
 
+# Window size, title, whenever you can resize it and colour
 window = Tk()
 window.geometry("1000x500")
 window.title('Lottery_Ticket')
@@ -13,6 +15,7 @@ window["bg"] = "royalblue"
 player_entry = uuid.uuid1()
 print(player_entry)
 
+# Defining my Play class function for my window
 class Play:
     def __init__(self, window):
         self.lotto_list = []
@@ -56,13 +59,11 @@ class Play:
                                  command=self.play_again)
         self.play_again.place(x=145, y=380)
         self.claim = Button(window, text='Claim Prize', bg='lightgreen', borderwidth=5, font=("Arial", 12, "bold"),
-                            command=self.claim_prize)
+                            command=self.claim_prize, state='disabled')
         self.claim.place(x=700, y=300)
         self.exit = Button(window, text='Exit', bg='lightgreen', borderwidth=5, font=("Arial", 12, "bold"),
                            command=self.exit)
         self.exit.place(x=730, y=380)
-
-
 
     def lotto_numbers(self):
         lotto = []
@@ -105,23 +106,27 @@ class Play:
 
         if win == 2:
             messagebox.showinfo("Congratulations", "You've won R20.00")
+            self.claim.config(state='normal')
 
         elif win == 3:
             messagebox.showinfo("Congratulations", "You've won R100.00")
-
+            self.claim.config(state='normal')
         elif win == 4:
             messagebox.showinfo("Congratulations", "You've won R2 384.00")
-
+            self.claim.config(state='normal')
         elif win == 5:
             messagebox.showinfo("Congratulations", "You've won R8 584.00")
-
+            self.claim.config(state='normal')
         elif win == 6:
             messagebox.showinfo("Congratulations", "You've won R10 000 000.000")
-
+            self.claim.config(state='normal')
         else:
             messagebox.showinfo("Tough Luck", "Play again and stand a chance of winning R10 000 000.00")
 
+        self.play.config(state='disabled')
+
     def play_again(self):
+        self.play.config(state='normal')
         self.number_entry.delete(0, END)
         self.number_entry2.delete(0, END)
         self.number_entry3.delete(0, END)
@@ -140,6 +145,7 @@ class Play:
         self.number_entry10.delete(0, END)
         self.number_entry11.delete(0, END)
         self.number_entry12.delete(0, END)
+        self.claim.config(state='disabled')
 
     def claim_prize(self):
         msg_box = messagebox.askquestion("Claiming your Prize", "Are you sure you want to claim your prize?",
@@ -155,6 +161,7 @@ class Play:
         if msg_box == "yes":
             window.destroy()
 
-
+# Reference what should be displayed on the window
 obj = Play(window)
+# Without this the window will not stop running resulting in no results being displayed
 window.mainloop()

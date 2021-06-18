@@ -1,6 +1,12 @@
+# These are all my programming running in the background of my window.
 from tkinter import *
 from tkinter import messagebox
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import json
 
+# Window size, title, whenever you can resize it and colour
 window = Tk()
 window.geometry("600x600")
 window.title('Lottery_Ticket')
@@ -8,7 +14,7 @@ window.resizable("False", "False")
 window["bg"] = "royalblue"
 variable = StringVar(window)
 
-
+# Defining my Claim class for my window
 class Claim:
     result = StringVar()
     variable.set("Select your choice")
@@ -21,14 +27,19 @@ class Claim:
         self.account_name_entry = Entry(window)
         self.account_name_entry.place(x=250, y=150)
         self.account_number = Label(window, text='Bank Account Number: ', bg='royalblue', font=("Arial", 15))
-        self.account_number.place(x=30, y=250)
+        self.account_number.place(x=30, y=230)
         self.account_number_entry = Entry(window)
-        self.account_number_entry.place(x=250, y=250)
+        self.account_number_entry.place(x=250, y=230)
         self.bank = Label(window, text='Select your Bank: ', bg='royalblue', font=("Arial", 15))
-        self.bank.place(x=30, y=350)
+        self.bank.place(x=30, y=300)
         self.optmenu = OptionMenu(window, variable, "ABSA Bank", "Capetic Bank", "FNB", "Nedbank", "Standard Bank")
-        self.optmenu.place(x=250, y=350, width=170)
-        self.verify = Button(window, text='Verify', bg='lightgreen', borderwidth=5, font=("Arial", 12, "bold"))
+        self.optmenu.place(x=250, y=300, width=170)
+        self.confirm_email = Label(window, text='Confirm email address: ', bg='royalblue', font=("Arial", 15))
+        self.confirm_email.place(x=30, y=400)
+        self.confirm_email_entry = Entry(window)
+        self.confirm_email_entry.place(x=250, y=400)
+        self.verify = Button(window, text='Verify', bg='lightgreen', borderwidth=5, font=("Arial", 12, "bold"),
+                             command=self.verify)
         self.verify.place(x=50, y=500)
         self.convert = Button(window, text='Currency Convertor', bg='lightgreen', borderwidth=5,
                               font=("Arial", 12, "bold"), command=self.convertor)
@@ -37,36 +48,55 @@ class Claim:
                            command=self.exit)
         self.exit.place(x=500, y=500)
 
+    def add_files(self, add_files):
+        print(add_files)
+        add_files = json.dumps(add_files)
+        with open("bank.txt", "a+") as bank_file:
+            bank_file.write(add_files)
+
     def verify(self):
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
+        Name = self.account_name_entry.get()
+        Number = self.account_number_entry.get()
+        Bank = self.optmenu.getboolean()
 
-        sender_email_id = 'byronleetinker03@gmail.com'
+        if Name == " " or Number == " ":
+            messagebox.showerror("Error", "Please enter valid details")
 
-        receiver_email_id = [self.email_entry]
+        player = {
+            "Account Holder Name": Name,
+            "Bank Account Number": Number,
+            "Bank": Bank
+        }
+        self.add_files(player)
 
-        password = input("Enter your password")
+        try:
+            sender_email_id = 'lottobyrontinker@gmail.com'
 
-        subject = "Greetings"
-        msg = MIMEMultipart()
-        msg['From'] = sender_email_id
-        msg['To'] = ','.join(receiver_email_id)
-        msg['Subject'] = subject
+            receiver_email_id = (self.confirm_email_entry.get())
 
-        body = "Congratulations.\n"
-        body = body + "You have claim your prize. Have a nice day."
+            password = 'lottobyron'
 
-        msg.attach(MIMEText(body, 'plain'))
-        text = msg.as_string()
-        s = smtplib.SMTP('smtp.gmail.com', 587)
-        s.starttls()
+            subject = "Greetings"
+            msg = MIMEMultipart()
+            msg['From'] = sender_email_id
+            msg['To'] = ','.join(receiver_email_id)
+            msg['Subject'] = subject
 
-        s.login(sender_email_id, password)
+            body = "Congratulations.\n"
+            body = body + "You have claim your prize. Have a nice day."
 
-        s.sendmail(sender_email_id, receiver_email_id, text)
+            msg.attach(MIMEText(body, 'plain'))
+            text = msg.as_string()
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+            s.starttls()
 
-        window.destroy()
+            s.login(sender_email_id, password)
+
+            s.sendmail(sender_email_id, receiver_email_id, text)
+
+        except:
+            messagebox.showinfo("Alert!", "Please check your emails for further information regarding your prize")
+            window.destroy()
 
     def convertor(self):
         msg_box = messagebox.askquestion("Currency Convertor", "Are you sure you want to convert your currency?",
@@ -79,8 +109,10 @@ class Claim:
         msg_box = messagebox.askquestion("Exit Application", "Are you sure you want to exit the application?",
                                          icon='warning')
         if msg_box == "yes":
+            messagebox.showinfo("Goodbye", "You are now exiting the program, Thank you for playing!")
             window.destroy()
 
-
+# Reference what should be displayed on the window
 obj = Claim(window)
+# Without this the window will not stop running resulting in no results being displayed
 window.mainloop()

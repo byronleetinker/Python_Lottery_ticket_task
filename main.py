@@ -1,15 +1,21 @@
+# Byron Tinker. Class 1
+# These are all my programming running in the background of my window.
 from tkinter import *
 from tkinter import messagebox
 from validate_email import validate_email
 import rsaidnumber
 from datetime import date
 from dateutil.relativedelta import relativedelta
+import json
 
+# Window size, title, whenever you can resize it and colour
 window = Tk()
 window.geometry("600x600")
 window.title('Lottery_Ticket')
 window.resizable("False", "False")
 window["bg"] = "royalblue"
+
+# Defining my Welcome class for my window
 
 
 class Welcome:
@@ -43,27 +49,30 @@ class Welcome:
         self.exit = Button(window, text='Exit', bg='lightgreen', borderwidth=5, font=("Arial", 12, "bold"),
                            command=self.exit)
         self.exit.place(x=500, y=500)
+        player_entry = self.name_entry.get().strip() + self.id_entry.get()[:2]
+        print(player_entry)
 
     def age_validation(self):
         ID = rsaidnumber.parse(self.id_entry.get())
         birthdate = ID.date_of_birth
         age = relativedelta(date.today(), birthdate.date())
+        age = age.years
 
-        if age.years >= 18:
-            messagebox.showinfo("Let's play", "You may begin playing")
+        if age >= 18:
+            age = str(age)
+            messagebox.showinfo("You are " + age + " years old", "You may begin playing")
             window.destroy()
             import play
 
-        elif age.years <= 18:
-            messagebox.showerror("You are too young too play")
+        elif age <= 18:
+            age = str(age)
+            messagebox.showerror("Sorry, You are " + age + " years old", "You are too young too play")
 
     def add_files(self, text_add_files):
-        import json
-
+        print(text_add_files)
         text_add_files = json.dumps(text_add_files)
-
-        with open("text.txt", "a+") as database_file:
-            database_file.write(text_add_files)
+        with open("login.txt", "a+") as login_file:
+            login_file.write(text_add_files)
 
     def verify(self):
         Name = self.name_entry.get()
@@ -90,16 +99,14 @@ class Welcome:
         else:
             self.age_validation()
 
-            self.age_validation(ID)
-            if int(self.age_validation(ID)) >= 18:
-                player = {
-                    "name": Name,
-                    "phone number": Number,
-                    "email": Email,
-                    "ID number": str(ID)
-                }
-                self.text_add_files(player)
-
+            # self.age_validation(ID)
+            player = {
+                "Name": Name,
+                "Phone number": Number,
+                "Email": Email,
+                "ID number": str(ID)
+            }
+            self.add_files(player)
 
     def delete(self):
         self.name_entry.delete(0, END)
@@ -113,6 +120,7 @@ class Welcome:
         if msg_box == "yes":
             window.destroy()
 
-
+# Reference what should be displayed on the window
 obj = Welcome(window)
+# Without this the window will not stop running resulting in no results being displayed
 window.mainloop()
