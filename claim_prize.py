@@ -14,7 +14,9 @@ window.resizable("False", "False")
 window["bg"] = "royalblue"
 variable = StringVar(window)
 
-# Defining my Claim class for my window
+
+# Defining my Claim class for my window includes labels, entries, buttons and their placements.
+# These are defined by the names, size, fonts and even colours.
 class Claim:
     result = StringVar()
     variable.set("Select your choice")
@@ -48,55 +50,61 @@ class Claim:
                            command=self.exit)
         self.exit.place(x=500, y=500)
 
+    # Defining the adding the information to the bank file.
     def add_files(self, add_files):
         print(add_files)
         add_files = json.dumps(add_files)
         with open("bank.txt", "a+") as bank_file:
             bank_file.write(add_files)
 
+    # Defining the function verification that insures all entries are filled and once all information is correctly inserted an email will be sent.
     def verify(self):
         Name = self.account_name_entry.get()
         Number = self.account_number_entry.get()
-        Bank = self.optmenu.getboolean()
 
-        if Name == " " or Number == " ":
+        if Name == " ":
             messagebox.showerror("Error", "Please enter valid details")
+
+        elif len(Number) != 16:
+            messagebox.showerror("Error", "Please enter correct bank account number")
 
         player = {
             "Account Holder Name": Name,
             "Bank Account Number": Number,
-            "Bank": Bank
         }
         self.add_files(player)
 
-        try:
-            sender_email_id = 'lottobyrontinker@gmail.com'
+    def verify(self):
+        # Sender's email
+        sender_email_id = 'lottobyrontinker@gmail.com'
+        # Receiver's email
+        receiver_email_id = self.confirm_email_entry.get()
+        # Password for sender's email
+        password = 'lottobyron'
+        subject = "Lottery Ticket"
+        msg = MIMEMultipart()
+        msg['From'] = sender_email_id
+        msg['To'] = receiver_email_id
+        msg['Subject'] = subject
+        body = "Congratulations\n"
+        body = body + "You have claimed your prize. Enjoy your day."
+        msg.attach(MIMEText(body, 'plain'))
+        text = msg.as_string()
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        # start TLS for security
+        s.starttls()
+        # Authentication
+        s.login(sender_email_id, password)
+        # message to be sent
 
-            receiver_email_id = (self.confirm_email_entry.get())
+        # sending the mail
+        s.sendmail(sender_email_id, receiver_email_id, text)
+        # terminating the session
+        s.quit()
+        messagebox.showinfo("Alert!", "Please check your emails for further information regarding your prize")
+        window.destroy()
 
-            password = 'lottobyron'
-
-            subject = "Greetings"
-            msg = MIMEMultipart()
-            msg['From'] = sender_email_id
-            msg['To'] = ','.join(receiver_email_id)
-            msg['Subject'] = subject
-
-            body = "Congratulations.\n"
-            body = body + "You have claim your prize. Have a nice day."
-
-            msg.attach(MIMEText(body, 'plain'))
-            text = msg.as_string()
-            s = smtplib.SMTP('smtp.gmail.com', 587)
-            s.starttls()
-
-            s.login(sender_email_id, password)
-
-            s.sendmail(sender_email_id, receiver_email_id, text)
-
-        except:
-            messagebox.showinfo("Alert!", "Please check your emails for further information regarding your prize")
-            window.destroy()
+    # Defining the function convertor which takes you to the next window which will be the Currency Convertor.
 
     def convertor(self):
         msg_box = messagebox.askquestion("Currency Convertor", "Are you sure you want to convert your currency?",
@@ -105,12 +113,16 @@ class Claim:
             window.destroy()
             import convertor
 
+    # Defining the exit function making sure that you really want to exit the program and
+    # if you do it will close the program
     def exit(self):
         msg_box = messagebox.askquestion("Exit Application", "Are you sure you want to exit the application?",
                                          icon='warning')
+        # If the player wants to exit the program, it will display this message and the window will close.
         if msg_box == "yes":
             messagebox.showinfo("Goodbye", "You are now exiting the program, Thank you for playing!")
             window.destroy()
+
 
 # Reference what should be displayed on the window
 obj = Claim(window)

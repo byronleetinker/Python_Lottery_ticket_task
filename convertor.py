@@ -12,7 +12,8 @@ window["bg"] = "royalblue"
 value = IntVar()
 
 
-# Defining the Convertor class for my window
+# Defining the Convertor class for my window includes labels, entries, buttons and their placements.
+# These are defined by the names, size, fonts and even colours.
 class Convertor:
 
     # Defining everything that will be displayed on the tkinter window
@@ -43,7 +44,7 @@ class Convertor:
             self.convert_list.insert(END, str(i))
         self.convert_list.place(x=230, y=230)
 
-    # Defining the currency function, this gives function to my currency convertor
+    # Defining the currency function, this gives function to my currency convertor.
     def convert_curr(self):
         num = float(self.value_entry.get())
         print(self.information_json['conversion_rates'][self.convert_list.get(ACTIVE)])
@@ -51,11 +52,13 @@ class Convertor:
         ans = round(num * self.information_json['conversion_rates'][self.convert_list.get(ACTIVE)], 2)
         self.convert_label['text'] = ans
 
-    # My Exit Button is being defined
+    # Defining the exit function making sure that you really want to exit the program and
+    # if you do it will close the program
     def exit(self):
         msg_box = messagebox.askquestion("Exit Application", "Are you sure you want to exit the application?",
                                          icon='warning')
         if msg_box == "yes":
+            # If the player wants to exit the program, it will display this message and the window will close.
             messagebox.showinfo("Goodbye", "You are now exiting the program, Thank you for playing!")
             window.destroy()
 

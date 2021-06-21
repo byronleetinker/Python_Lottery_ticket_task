@@ -7,6 +7,7 @@ import rsaidnumber
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import json
+from playsound import playsound
 
 # Window size, title, whenever you can resize it and colour
 window = Tk()
@@ -15,7 +16,9 @@ window.title('Lottery_Ticket')
 window.resizable("False", "False")
 window["bg"] = "royalblue"
 
-# Defining my Welcome class for my window
+
+# Defining my Welcome class for my window includes labels, entries, buttons and their placements.
+# These are defined by the names, size, fonts and even colours.
 
 
 class Welcome:
@@ -52,6 +55,8 @@ class Welcome:
         player_entry = self.name_entry.get().strip() + self.id_entry.get()[:2]
         print(player_entry)
 
+    # Defining the function age validation function which generates the 18 and validates it.
+    # You may only play if you are 18 and over. No under 18's are allowed to play.
     def age_validation(self):
         ID = rsaidnumber.parse(self.id_entry.get())
         birthdate = ID.date_of_birth
@@ -61,6 +66,7 @@ class Welcome:
         if age >= 18:
             age = str(age)
             messagebox.showinfo("You are " + age + " years old", "You may begin playing")
+            playsound("Ladies And Gentlemen Are You Ready Sound Effect.mp3")
             window.destroy()
             import play
 
@@ -68,12 +74,15 @@ class Welcome:
             age = str(age)
             messagebox.showerror("Sorry, You are " + age + " years old", "You are too young too play")
 
+    # Defining the add files function adding all information inserted to the login text file.
     def add_files(self, text_add_files):
         print(text_add_files)
         text_add_files = json.dumps(text_add_files)
         with open("login.txt", "a+") as login_file:
             login_file.write(text_add_files)
 
+    # Defining the Verify function which verifies the information insuring that all the entries are filled in
+    # and the correct amount of numbers are used.
     def verify(self):
         Name = self.name_entry.get()
         Number = self.number_entry.get()
@@ -108,17 +117,21 @@ class Welcome:
             }
             self.add_files(player)
 
+    # Defining the Delete function insuring to clear all the entries
     def delete(self):
         self.name_entry.delete(0, END)
         self.number_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.id_entry.delete(0, END)
 
+    # Defining the exit function making sure that you really want to exit the program and
+    # if you do it will close the program
     def exit(self):
         msg_box = messagebox.askquestion("Exit Application", "Are you sure you want to exit the application?",
                                          icon='warning')
         if msg_box == "yes":
             window.destroy()
+
 
 # Reference what should be displayed on the window
 obj = Welcome(window)

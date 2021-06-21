@@ -1,4 +1,1 @@
-{"Account Holder Name": "Byron Tinker", "Bank Account Number": "741789465132785"}
-{"Account Holder Name": "Byron Tinker", "Bank Account Number": "845612389465"}
-{"Account Holder Name": "xdctfvgybuh", "Bank Account Number": "746518465"}
-{"Account Holder Name": "dxcfgvhbj", "Bank Account Number": "561324865"}
+# This text file is used to store the banking details of the player.

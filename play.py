@@ -12,10 +12,13 @@ window.title('Lottery_Ticket')
 window.resizable("False", "False")
 window["bg"] = "royalblue"
 
+# Player ID
 player_entry = uuid.uuid1()
 print(player_entry)
 
-# Defining my Play class function for my window
+
+# Defining my Play class function for my window includes labels, entries, buttons and their placements.
+# These are defined by the names, size, fonts and even colours.
 class Play:
     def __init__(self, window):
         self.lotto_list = []
@@ -65,6 +68,7 @@ class Play:
                            command=self.exit)
         self.exit.place(x=730, y=380)
 
+    # Defining the Lotto numbers function. This function generates numbers to compare to the users numbers to play the lotto.
     def lotto_numbers(self):
         lotto = []
         while len(lotto) < 6:
@@ -103,7 +107,8 @@ class Play:
                             int(self.number_entry6.get())}
             matches = lotto.intersection(user_numbers)
             win = len(matches)
-
+        # This function is used for determining the winnings of the player,
+        # congratulating them and telling them the amount they've won or apologizing if they did not win.
         if win == 2:
             messagebox.showinfo("Congratulations", "You've won R20.00")
             self.claim.config(state='normal')
@@ -125,6 +130,7 @@ class Play:
 
         self.play.config(state='disabled')
 
+    # This function clears all the entries, giving the player another opportunity to play.
     def play_again(self):
         self.play.config(state='normal')
         self.number_entry.delete(0, END)
@@ -147,6 +153,7 @@ class Play:
         self.number_entry12.delete(0, END)
         self.claim.config(state='disabled')
 
+    # Requesting if the player wants to claim their prize that they've won.
     def claim_prize(self):
         msg_box = messagebox.askquestion("Claiming your Prize", "Are you sure you want to claim your prize?",
                                          icon='warning')
@@ -155,11 +162,14 @@ class Play:
             window.destroy()
             import claim_prize
 
+    # Defining the exit function making sure that you really want to exit the program and
+    # if you do it will close the program
     def exit(self):
         msg_box = messagebox.askquestion("Exit Application", "Are you sure you want to exit the application?",
                                          icon='warning')
         if msg_box == "yes":
             window.destroy()
+
 
 # Reference what should be displayed on the window
 obj = Play(window)
